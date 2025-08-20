@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\PostSeeder;
 use Database\Seeders\MemoSeeder;
+use Database\Seeders\TaskSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         // 他のSeederもここで呼び出します
 
-        $this->call(UserSeeder::class); // UserSeeder を呼び出す記述を追加
+        //$this->call(UserSeeder::class); // UserSeeder を呼び出す記述を追加
 
         // \App\Models\User::factory(10)->create(); // ダミーユーザーをファクトリで作る場合の例
         //$this->call(OtherSeeder::class);
@@ -35,8 +36,8 @@ class DatabaseSeeder extends Seeder
          * アプリケーションのデータベースにデータを入れます。
          */
 
-        $this->call(PostSeeder::class); // PostSeeder を実行するように指示
+        //$this->call(PostSeeder::class); // PostSeeder を実行するように指示
 
-        $this->call(MemoSeeder::class);
+        $this->call(TaskSeeder::class);
     }
 }

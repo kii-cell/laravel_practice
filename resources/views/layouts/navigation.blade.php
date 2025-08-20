@@ -20,6 +20,10 @@
                     <x-nav-link :href="route('admin.posts.index')" :active="request()->routeIs('admin.posts.*')">
                         記事管理
                     </x-nav-link>
+                    <!-- 追加する記事管理画面へのリンク（通常表示用） -->
+                    <x-nav-link :href="route('admin.tasks.index')" :active="request()->routeIs('admin.tasks.*')">
+                        タスク管理
+                    </x-nav-link>
                 </div>
             </div>
 
