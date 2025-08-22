@@ -78,6 +78,21 @@
                             </select>
                         </div>
                         <div class="mb-4">
+                            <label for="user_id" class="block text-gray-700 text-sm font-bold mb-2">担当者</label>
+                            <select name="user_id" id="user_id"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                @if (empty($task))
+                                    <option value="">選択してください</option>
+                                @endif
+                                @foreach ($user as $val)
+                                    <option value="{{ $val->id }}"
+                                        {{ old('user_id', $task->user_id ?? '') == $val->id ? 'selected' : '' }}>
+                                        {{ $val->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-4">
                             <label for="deadline_at" class="block text-gray-700 text-sm font-bold mb-2">対応期日</label>
                             <input type="datetime-local" name="deadline_at" id="deadline_at"
                                 value="{{ old('deadline_at', isset($task->deadline_at) ? optional($task->deadline_at)->format('Y-m-d\TH:i') : '') }}"

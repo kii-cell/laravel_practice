@@ -15,7 +15,7 @@ class TaskSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('tasks')->truncate();
+
         DB::table('tasks')->insert(
             [
                 'title' => 'シーダーで作ったタスク',
@@ -24,6 +24,7 @@ class TaskSeeder extends Seeder
                 'support_at' => Carbon::now(),
                 'priority' => 1,
                 'status' => 1,
+                'user_id' => 3,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
 

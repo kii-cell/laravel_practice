@@ -23,6 +23,9 @@
                         <p><strong>ID:</strong> {{ $task->id }}</p>
                         <p><strong>ステータス:</strong> {{ config('const.task.status')[$task->status] }}</p>
                         <p><strong>優先度:</strong> {{ config('const.task.priority')[$task->priority] }}</p>
+                    </div>
+                    <div class="flex gap-4 mt-4">
+                        <p><strong>担当者:</strong> {{ $user->name }}</p>
                         <p>
                             <strong>対応期限:</strong>
                             @if ($diff < 0)

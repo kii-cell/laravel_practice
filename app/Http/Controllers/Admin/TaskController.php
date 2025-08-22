@@ -6,24 +6,40 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
+
+    public function top()
+    {
+        $allTasks = Task::all();
+        $login_user = Auth::user();
+        if ($allTasks['user_id'] = $login_user->id) {
+            $tasks = Task::where('user_id', $login_user->id)->where('status', 1 || 2)->get();
+        };
+
+        return view('dashboard', isset($tasks) ? compact('tasks') : '');
+    }
     public function index()
     {
-        $tasks = Task::all();
+        $tasks = Task::with('user')->get();
         return view('admin.tasks.index', compact('tasks'));
     }
 
     public function show($id)
     {
         $task = Task::findorFail($id);
-        return view('admin.tasks.show', compact('task'));
+        $user = $task->user;
+        return view('admin.tasks.show', compact('task', 'user'));
     }
 
     public function create()
     {
-        return view('admin.tasks.create');
+        $user = User::with('tasks')->get();
+
+        return view('admin.tasks.create', compact('user'));
     }
 
     public function store(Request $request)
@@ -45,7 +61,8 @@ class TaskController extends Controller
     public function edit($id)
     {
         $task = Task::findOrFail($id);
-        return view('admin.tasks.create', compact('task'));
+        $user = User::all();
+        return view('admin.tasks.create', compact('user', 'task'));
     }
 
     public function update(Request $request, $id)
@@ -80,6 +97,7 @@ class TaskController extends Controller
             'support_at' => 'nullable|date_format:Y-m-d\TH:i',
             'priority' => 'required',
             'status' => 'required',
+            'user_id' => 'required',
         ];
 
         $messages = [
@@ -92,6 +110,7 @@ class TaskController extends Controller
             'support_at.date_format' => ':attributeは正しい日時形式で入力してください。',
             'priority.required' => ':attributeは必須項目です。',
             'status.required' => ':attributeは必須項目です。',
+            'user_id.required' => ':attributeは必須項目です。',
         ];
 
         $attributes = [
@@ -101,6 +120,7 @@ class TaskController extends Controller
             'support_at' => '対応日時',
             'priority' => '優先度',
             'status' => 'ステータス',
+            'user_id' => '担当者',
         ];
 
         return Validator::make($request->all(), $rules, $messages, $attributes);

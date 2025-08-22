@@ -29,6 +29,7 @@
                             <tr>
                                 <th class="border px-4 py-2">ID</th>
                                 <th class="border px-4 py-2">タイトル</th>
+                                <th class="border px-4 py-2">担当者</th>
                                 <th class="border px-4 py-2">対応期限</th>
                                 <th class="border px-4 py-2">優先度</th>
                                 <th class="border px-4 py-2">ステータス</th>
@@ -37,26 +38,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($tasks as $val)
+                            @foreach ($tasks as $task)
                                 <tr>
-                                    <td class="border px-4 py-2">{{ $val->id }}</td>
-                                    <td class="border px-4 py-2">{{ $val->title }}</td>
+                                    <td class="border px-4 py-2">{{ $task->id }}</td>
+                                    <td class="border px-4 py-2">{{ $task->title }}</td>
+                                    <td class="border px-4 py-2">{{ $task->user->name }}</td>
                                     <td class="border px-4 py-2">
-                                        {{ optional($val->deadline_at)->format('Y-m-d H:i:s') }}
+                                        {{ optional($task->deadline_at)->format('Y-m-d H:i:s') }}
                                     </td>
                                     <td class="border px-4 py-2">
-                                        {{ config('const.task.priority')[$val->priority] }}</td>
+                                        {{ config('const.task.priority')[$task->priority] }}</td>
                                     <td class="border px-4 py-2">
-                                        {{ config('const.task.status')[$val->status] }}
+                                        {{ config('const.task.status')[$task->status] }}
                                     </td>
                                     <td class="border px-4 py-2">
-                                        {{ optional($val->updated_at)->format('Y-m-d H:i:s') ?? '未更新' }}</td>
+                                        {{ optional($task->updated_at)->format('Y-m-d H:i:s') ?? '未更新' }}</td>
                                     <td class="border px-4 py-2 flex items-center justify-center space-x-2">
-                                        <a href="{{ route('admin.tasks.show', $val->id) }}"
+                                        <a href="{{ route('admin.tasks.show', $task->id) }}"
                                             class="text-blue-600 hover:underline">詳細</a>
-                                        <a href="{{ route('admin.tasks.edit', $val->id) }}"
+                                        <a href="{{ route('admin.tasks.edit', $task->id) }}"
                                             class="ml-2 text-green-600 hover:underline">編集</a>
-                                        <form action="{{ route('admin.tasks.delete', $val->id) }}" method="POST"
+                                        <form action="{{ route('admin.tasks.delete', $task->id) }}" method="POST"
                                             onsubmit="return confirm('本当に削除しますか？');">
                                             @csrf
                                             @method('DELETE')

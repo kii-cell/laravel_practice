@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         // 他のSeederもここで呼び出します
 
-        //$this->call(UserSeeder::class); // UserSeeder を呼び出す記述を追加
+        // $this->call(UserSeeder::class); // UserSeeder を呼び出す記述を追加
 
         // \App\Models\User::factory(10)->create(); // ダミーユーザーをファクトリで作る場合の例
         //$this->call(OtherSeeder::class);
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         /*User::factory()->create([
-            'name' => 'Test User',
+            'name' => 'Test //User',
             'email' => 'test@example.com',
         ]);*/
 

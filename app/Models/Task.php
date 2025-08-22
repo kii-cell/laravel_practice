@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
@@ -18,6 +19,7 @@ class Task extends Model
         'support_at',
         'priority',
         'status',
+        'user_id',
     ];
     protected $casts = [
         'deadline_at' => 'datetime',
@@ -27,6 +29,11 @@ class Task extends Model
         'deleted_at'  => 'datetime',
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function saveTask(Request $request, $update = null)
     {
         $this->title = $request->input('title');
@@ -35,6 +42,7 @@ class Task extends Model
         $this->support_at = !empty($request->input('support_at')) ? $request->input('support_at') : null;
         $this->priority = $request->input('priority');
         $this->status = $request->input('status');
+        $this->user_id = $request->input('user_id');
         $this->updated_at = $update;
         $this->save();
     }
