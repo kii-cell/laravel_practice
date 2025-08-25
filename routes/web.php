@@ -9,7 +9,7 @@ use App\Http\Controllers\Admin\TaskController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('adomin.top');
 
 Route::get('/dashboard', [TaskController::class, 'top'])
     ->middleware(['auth', 'verified'])->name('admin.top');
