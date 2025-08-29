@@ -27,8 +27,7 @@ class TaskController extends Controller
     public function index()
     {
 
-        $tasks = Task::with('user')->get();
-        return view('admin.tasks.index', compact('tasks'));
+        $tasks = Task::all();
 
         $users = User::all();
         $query = Task::query();
@@ -43,11 +42,11 @@ class TaskController extends Controller
         }
 
         if (!empty(request('status'))) {
-            $query->where('status', request('status'));
+            $query->whereIn('status', request('status'));
         }
 
         if (!empty(request('priority'))) {
-            $query->where('priority', request('priority'));
+            $query->whereIn('priority', request('priority'));
         }
 
         if (!empty($start) && !empty($end)) {
