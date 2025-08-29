@@ -42,6 +42,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/tasks/{id}/update', [TaskController::class, 'update'])->name('admin.tasks.update');
     //削除
     Route::delete('/admin/tasks/{id}/delete', [TaskController::class, 'destroy'])->name('admin.tasks.delete');
+    Route::get('/error', function () {
+        // 意図的にシステムエラーを発生させる
+        throw new \Exception('これはテスト用のシステムエラーです');
+    });
 });
 
 require __DIR__ . '/auth.php';

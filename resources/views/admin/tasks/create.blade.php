@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ isset($task) ? 'タスク編集' : '新規タスク' }}
+            {{ Route::is('admin.tasks.edit') ? 'タスク編集' : '新規タスク' }}
         </h2>
     </x-slot>
 
