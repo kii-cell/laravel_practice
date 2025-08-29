@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-4">
             <div class="bg-white shadow-sm rounded-lg">
                 <div class="p-6 text-gray-900">
 
@@ -16,6 +16,77 @@
                             {{ session('success') }}
                         </div>
                     @endif
+                    <form action="{{ route('admin.tasks.index') }}" method="GET">
+                        @csrf
+                        <div class="flex items-left mb-4">
+                            <div>
+                                <input type="text" name="keyword" placeholder="タイトルを検索"
+                                    value="{{ request('keyword') }}"
+                                    class="border border-gray-300 rounded-md px-2 py-1 text-left w-40">
+                            </div>
+                            <div>
+                                <select name="user_id" class="border border-gray-300 rounded-md px-1 py-1 w-40">
+                                    @if (empty(request('user_id')))
+                                        <option value="">担当者</option>
+                                    @else
+                                        <option value="">全て</option>
+                                    @endif
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}"
+                                            {{ request('user_id') == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <select name="status" class="border border-gray-300 rounded-md px-1 py-1 w-40">
+                                    @if (empty(request('status')))
+                                        <option value="">ステータス</option>
+                                    @else
+                                        <option value="">全て</option>
+                                    @endif
+                                    @foreach (config('const.task.status') as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ request('status') == $key ? 'selected' : '' }}>
+                                            {{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <select name="priority" class="border border-gray-300 rounded-md px-1 py-1 w-40">
+                                    @if (empty(request('priority')))
+                                        <option value="">優先度</option>
+                                    @else
+                                        <option value="">全て</option>
+                                    @endif
+                                    @foreach (config('const.task.priority') as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ request('priority') == $key ? 'selected' : '' }}>
+                                            {{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <input type="date" name="start_date" value="{{ request('start_date') }}"
+                                    class="border border-gray-300 rounded-md px-2 py-1 w-40">
+                                <span>〜</span>
+
+                                <input type="date" name="end_date" value="{{ request('end_date') }}"
+                                    class="border border-gray-300 rounded-md px-2 py-1 w-40">
+                            </div>
+                            <div>
+                                <button type="submit"
+                                    class="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">検索</button>
+                                <a href="{{ route('admin.tasks.index') }}"
+                                    class="ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">リセット</a>
+                            </div>
+                        </div>
+                    </form>
 
                     <div class="flex justify-end mb-4">
                         <a class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

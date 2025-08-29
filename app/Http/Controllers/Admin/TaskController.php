@@ -6,13 +6,46 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Models\User;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        $tasks = Task::all();
-        return view('admin.tasks.index', compact('tasks'));
+        $users = User::all();
+        $query = Task::query();
+        $start = request('start_date');
+        $end   = request('end_date');
+        if (!empty(request('keyword'))) {
+            $query->where('title', 'like', '%' . request('keyword') . '%');
+        }
+
+        if (!empty(request('user_id'))) {
+            $query->where('user_id', request('user_id'));
+        }
+
+        if (!empty(request('status'))) {
+            $query->where('status', request('status'));
+        }
+
+        if (!empty(request('priority'))) {
+            $query->where('priority', request('priority'));
+        }
+
+        if (!empty($start) && !empty($end)) {
+            // 期間指定（開始日〜終了日）
+            $query->whereBetween('deadline_at', [$start, $end]);
+        } elseif (!empty($start)) {
+            // 開始日以降
+            $query->where('deadline_at', '>=', $start);
+        } elseif (!empty($end)) {
+            // 終了日以前
+            $query->where('deadline_at', '<=', $end);
+        }
+
+
+        $tasks = $query->get();
+        return view('admin.tasks.index', compact('tasks', 'users'));
     }
 
     public function show($id)
@@ -53,7 +86,7 @@ class TaskController extends Controller
         $validator = $this->validatePost($request);
 
         if ($validator->fails()) {
-            return redirect(route('admin.tasks.create', $id))
+            return redirect(route('admin.tasks.edit', $id))
                 ->withErrors($validator)
                 ->withInput();
         }
