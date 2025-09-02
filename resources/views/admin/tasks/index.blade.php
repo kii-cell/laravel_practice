@@ -17,8 +17,24 @@
                             {{ session('success') }}
                         </div>
                     @endif
+                    <form method="POST" action="{{ route('admin.tasks.download-csv') }}">
+                        @csrf
+                        <input type="hidden" name="title" value="{{ request('title') }}">
+                        <input type="hidden" name="user_id" value="{{ request('user_id') }}">
+                        @foreach ((array) request('status') as $s)
+                            <input type="hidden" name="status[]" value="{{ $s }}">
+                        @endforeach
+                        @foreach ((array) request('priority') as $p)
+                            <input type="hidden" name="priority[]" value="{{ $p }}">
+                        @endforeach
+                        <input type="hidden" name="deadline_from" value="{{ request('deadline_from') }}">
+                        <input type="hidden" name="deadline_to" value="{{ request('deadline_to') }}">
+                        <button type="submit" class="px-4 py-2 bg-green-500 text-white rounded">CSVダウンロード</button>
+                    </form>
 
-                    <form action="{{ route('admin.tasks.index') }}" method="GET" class="mb-6" x-data="{ open: false }">
+
+                    <form action="{{ route('admin.tasks.index') }}" method="GET" class="mb-6"
+                        x-data="{ open: false }">
                         <!-- 上部バー -->
                         <div class="flex justify-between items-center mb-2">
                             <!-- 折りたたみトグル -->

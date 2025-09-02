@@ -46,6 +46,7 @@ Route::middleware('auth')->group(function () {
         // 意図的にシステムエラーを発生させる
         throw new \Exception('これはテスト用のシステムエラーです');
     });
+    Route::post('/admin/tasks/download-csv', [TaskController::class, 'downloadCsv'])->name('admin.tasks.download-csv');
 });
 
 require __DIR__ . '/auth.php';

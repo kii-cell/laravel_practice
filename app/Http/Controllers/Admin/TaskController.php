@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use App\Models\Task;
 use App\Models\User;
 
@@ -24,44 +25,11 @@ class TaskController extends Controller
 
         return view('dashboard', isset($tasks) ? compact('tasks') : '');
     }
-    public function index()
+    public function index(Request $request)
     {
-
-        $tasks = Task::all();
-
+        $tasks = $this->getFilteredTasks($request);
         $users = User::all();
-        $query = Task::query();
-        $start = request('start_date');
-        $end   = request('end_date');
-        if (!empty(request('keyword'))) {
-            $query->where('title', 'like', '%' . request('keyword') . '%');
-        }
 
-        if (!empty(request('user_id'))) {
-            $query->where('user_id', request('user_id'));
-        }
-
-        if (!empty(request('status'))) {
-            $query->whereIn('status', request('status'));
-        }
-
-        if (!empty(request('priority'))) {
-            $query->whereIn('priority', request('priority'));
-        }
-
-        if (!empty($start) && !empty($end)) {
-            // 期間指定（開始日〜終了日）
-            $query->whereBetween('deadline_at', [$start, $end]);
-        } elseif (!empty($start)) {
-            // 開始日以降
-            $query->where('deadline_at', '>=', $start);
-        } elseif (!empty($end)) {
-            // 終了日以前
-            $query->where('deadline_at', '<=', $end);
-        }
-
-
-        $tasks = $query->get();
         return view('admin.tasks.index', compact('tasks', 'users'));
     }
 
@@ -161,5 +129,71 @@ class TaskController extends Controller
         ];
 
         return Validator::make($request->all(), $rules, $messages, $attributes);
+    }
+    private function getFilteredTasks(Request $request)
+    {
+        $query = Task::query();
+
+        if (!empty($request->keyword)) {
+            $query->where('title', 'like', '%' . $request->keyword . '%');
+        }
+
+        if (!empty($request->user_id)) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        if (!empty($request->status)) {
+            $query->whereIn('status', $request->status);
+        }
+
+        if (!empty($request->priority)) {
+            $query->whereIn('priority', $request->priority);
+        }
+
+        if (!empty($request->start_date) && !empty($request->end_date)) {
+            $query->whereBetween('deadline_at', [$request->start_date, $request->end_date]);
+        } elseif (!empty($request->start_date)) {
+            $query->where('deadline_at', '>=', $request->start_date);
+        } elseif (!empty($request->end_date)) {
+            $query->where('deadline_at', '<=', $request->end_date);
+        }
+
+        return $query->get();
+    }
+    public function downloadCsv(Request $request)
+    {
+        $tasks = $this->getFilteredTasks($request);
+
+        // CSVヘッダー
+        $csvData = [
+            ['ID', 'タイトル', '担当者', '対応期限', '優先度', 'ステータス', '最終更新日時']
+        ];
+
+        foreach ($tasks as $task) {
+            $csvData[] = [
+                $task->id,
+                $task->title,
+                $task->user->name ?? '',
+                optional($task->deadline_at)->format('Y-m-d') ?? '',
+                config('const.task.priority')[$task->priority] ?? '',
+                config('const.task.status')[$task->status] ?? '',
+                optional($task->updated_at)->format('Y-m-d H:i:s') ?? '',
+            ];
+        }
+
+        // CSV文字列生成
+        $csv = '';
+        foreach ($csvData as $row) {
+            $escaped = array_map(fn($v) => "'" . str_replace("'", "''", $v) . "'", $row);
+            $csv .= implode(',', $escaped) . "\r\n";
+        }
+
+        $filename = 'tasks_export_' . date('YmdHis') . '.csv';
+        $encodedCsv = mb_convert_encoding($csv, 'SJIS-win', 'UTF-8');
+
+        return Response::make($encodedCsv, 200, [
+            'Content-Type' => 'text/csv; charset=SJIS',
+            'Content-Disposition' => "attachment; filename={$filename}"
+        ]);
     }
 }
