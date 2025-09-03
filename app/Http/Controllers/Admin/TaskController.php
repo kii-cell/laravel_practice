@@ -139,6 +139,7 @@ class TaskController extends Controller
             ['ID', 'タイトル', '担当者', '対応期限', '優先度', 'ステータス', '最終更新日時']
         ];
 
+        // タスクを1行ずつ追加
         foreach ($tasks as $task) {
             $csvData[] = [
                 $task->id,
@@ -154,18 +155,23 @@ class TaskController extends Controller
         // CSV文字列生成
         $csv = '';
         foreach ($csvData as $row) {
-            $escaped = array_map(fn($v) => "'" . str_replace("'", "''", $v) . "'", $row);
+            $escaped = [];
+            foreach ($row as $value) {
+                $escaped[] = '\'' . str_replace('\'', '\'\'', $value) . '\'';
+            }
             $csv .= implode(',', $escaped) . "\r\n";
         }
 
         $filename = 'tasks_export_' . date('YmdHis') . '.csv';
         $encodedCsv = mb_convert_encoding($csv, 'SJIS-win', 'UTF-8');
 
-        return Response::make($encodedCsv, 200, [
+        // CSV出力
+        return response($encodedCsv, 200, [
             'Content-Type' => 'text/csv; charset=SJIS',
             'Content-Disposition' => "attachment; filename={$filename}"
         ]);
     }
+
     private function getFilteredTasks(Request $request)
     {
         $query = Task::query();
