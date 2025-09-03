@@ -82,9 +82,10 @@
                         </div>
                     </form>
 
-                    <div class="flex justify-end items-center gap-4 mb-4">
+                    <div class="flex flex-col items-end gap-2 mb-4">
                         {{-- CSVダウンロード --}}
-                        <form method="POST" action="{{ route('admin.tasks.download-csv') }}">
+                        <form method="POST" action="{{ route('admin.tasks.download-csv') }}"
+                            class="w-full flex justify-end">
                             @csrf
                             <input type="hidden" name="title" value="{{ request('title') }}">
                             <input type="hidden" name="user_id" value="{{ request('user_id') }}">
@@ -96,13 +97,19 @@
                             @endforeach
                             <input type="hidden" name="deadline_from" value="{{ request('deadline_from') }}">
                             <input type="hidden" name="deadline_to" value="{{ request('deadline_to') }}">
-                            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded">CSVダウンロード</button>
+                            <button type="submit"
+                                class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                                CSVダウンロード
+                            </button>
                         </form>
 
                         {{-- 新規作成 --}}
                         <a href="{{ route('admin.tasks.create') }}"
-                            class="px-4 py-2 bg-blue-500 text-white rounded">新規作成</a>
+                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                            新規作成
+                        </a>
                     </div>
+
 
                     {{-- テーブル --}}
                     <table class="table-auto w-full border">
