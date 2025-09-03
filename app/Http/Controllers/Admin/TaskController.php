@@ -130,36 +130,6 @@ class TaskController extends Controller
 
         return Validator::make($request->all(), $rules, $messages, $attributes);
     }
-    private function getFilteredTasks(Request $request)
-    {
-        $query = Task::query();
-
-        if (!empty($request->keyword)) {
-            $query->where('title', 'like', '%' . $request->keyword . '%');
-        }
-
-        if (!empty($request->user_id)) {
-            $query->where('user_id', $request->user_id);
-        }
-
-        if (!empty($request->status)) {
-            $query->whereIn('status', $request->status);
-        }
-
-        if (!empty($request->priority)) {
-            $query->whereIn('priority', $request->priority);
-        }
-
-        if (!empty($request->start_date) && !empty($request->end_date)) {
-            $query->whereBetween('deadline_at', [$request->start_date, $request->end_date]);
-        } elseif (!empty($request->start_date)) {
-            $query->where('deadline_at', '>=', $request->start_date);
-        } elseif (!empty($request->end_date)) {
-            $query->where('deadline_at', '<=', $request->end_date);
-        }
-
-        return $query->get();
-    }
     public function downloadCsv(Request $request)
     {
         $tasks = $this->getFilteredTasks($request);
@@ -195,5 +165,35 @@ class TaskController extends Controller
             'Content-Type' => 'text/csv; charset=SJIS',
             'Content-Disposition' => "attachment; filename={$filename}"
         ]);
+    }
+    private function getFilteredTasks(Request $request)
+    {
+        $query = Task::query();
+
+        if (!empty($request->keyword)) {
+            $query->where('title', 'like', '%' . $request->keyword . '%');
+        }
+
+        if (!empty($request->user_id)) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        if (!empty($request->status)) {
+            $query->whereIn('status', $request->status);
+        }
+
+        if (!empty($request->priority)) {
+            $query->whereIn('priority', $request->priority);
+        }
+
+        if (!empty($request->start_date) && !empty($request->end_date)) {
+            $query->whereBetween('deadline_at', [$request->start_date, $request->end_date]);
+        } elseif (!empty($request->start_date)) {
+            $query->where('deadline_at', '>=', $request->start_date);
+        } elseif (!empty($request->end_date)) {
+            $query->where('deadline_at', '<=', $request->end_date);
+        }
+
+        return $query->get();
     }
 }
