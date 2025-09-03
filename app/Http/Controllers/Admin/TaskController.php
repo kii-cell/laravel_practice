@@ -176,13 +176,17 @@ class TaskController extends Controller
     {
         $query = Task::query();
 
-        if (!empty($request->keyword)) {
-            $query->where('title', 'like', '%' . $request->keyword . '%');
+        // タイトル（部分一致）
+        if (!empty($request->title)) {
+            $query->where('title', 'like', '%' . $request->title . '%');
         }
 
+        // 担当者
         if (!empty($request->user_id)) {
             $query->where('user_id', $request->user_id);
         }
+
+        // ステータス
 
         if (!empty($request->status)) {
             $query->whereIn('status', $request->status);
@@ -192,11 +196,11 @@ class TaskController extends Controller
             $query->whereIn('priority', $request->priority);
         }
 
-        if (!empty($request->start_date) && !empty($request->end_date)) {
-            $query->whereBetween('deadline_at', [$request->start_date, $request->end_date]);
-        } elseif (!empty($request->start_date)) {
+        // 期限条件
+        if (!empty($request->start_date)) {
             $query->where('deadline_at', '>=', $request->start_date);
-        } elseif (!empty($request->end_date)) {
+        }
+        if (!empty($request->end_date)) {
             $query->where('deadline_at', '<=', $request->end_date);
         }
 
