@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
         // デフォルト認証（メールアドレス）でログインできるユーザーを作成
         User::create(
             [
-                'name' => 'テストユーザー',
-                'email' => 'test@example.com', // 認証に使うメールアドレスを設定
-                'password' => Hash::make('password'), // パスワードをハッシュ化して保存
+                'name' => 'テストユーザー2',
+                'email' => 'test2@example.com', // 認証に使うメールアドレスを設定
+                'password' => Hash::make('password2'), // パスワードをハッシュ化して保存
                 // 他に必要なデフォルトカラムがあればここに追加 (例: email_verified_at など)
             ],
             // ...
