@@ -13,7 +13,7 @@
 
     <ul>
         @foreach ($tasks as $task)
-            <li>{{ $task->deadline->format('Y年m月d日 H時i分') }}:
+            <li>{{ $task->deadline_at->format('Y年m月d日 H時i分') }}:
                 {{ $task->title }}（{{ $task->status === 1 ? '起票' : '対応中' }}）</li>
         @endforeach
     </ul>

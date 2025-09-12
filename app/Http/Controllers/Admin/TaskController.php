@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Gate;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -27,6 +29,10 @@ class TaskController extends Controller
     }
     public function index(Request $request)
     {
+        if (Gate::denies('admin')) {
+            abort(403, 'アクセス権限がありません');
+        }
+
         $tasks = $this->getFilteredTasks($request);
         $users = User::all();
 

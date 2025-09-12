@@ -54,7 +54,7 @@ class SendTaskRemindMail extends Command
             $user = $userTasks->first()->user;
             if (!$user || !$user->email) continue;
 
-            Mail::to($user->email)->queue(new \App\Mail\TaskRemindMail($user->name, $userTasks));
+            Mail::to($user->email)->send(new \App\Mail\TaskRemindMail($user->name, $userTasks));
 
             $this->info("メール送信完了: {$user->email} / タスク件数: " . count($userTasks));
         }

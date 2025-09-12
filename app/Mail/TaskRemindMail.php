@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue; // キュー対応したい場合
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -42,7 +42,7 @@ class TaskRemindMail extends Mailable implements ShouldQueue
     public function content(): Content
     {
         return new Content(
-            view: 'emails.task_remind', // 後で作成する Blade ファイル
+            view: 'admin.tasks.task_remind', // 後で作成する Blade ファイル
             with: [
                 'name' => $this->userName,
                 'tasks' => $this->tasks,
