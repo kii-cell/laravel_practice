@@ -39,9 +39,12 @@
                         <div class="mb-4">
                             <label for="title" class="block text-gray-700 text-sm font-bold mb-2">タイトル</label>
                             <input type="text" name="title" id="title"
-                                value="{{ old('title', $task->title ?? '') }}"
+                                value="{{ old('title', $task->title ?? '') }}" maxlength="100"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                            <span id="title-char-count">{{ mb_strlen(old('title', $task->title ?? '')) }}</span>/100 文字
                         </div>
+
+
                         <div class="mb-4">
                             <label for="content" class="block text-gray-700 text-sm font-bold mb-2">本文</label>
                             <textarea name="content" id="content" rows="6"
@@ -115,4 +118,6 @@
             </div>
         </div>
     </div>
+    @vite(['resources/js/app.js', 'resources/js/task.js'])
+
 </x-app-layout>

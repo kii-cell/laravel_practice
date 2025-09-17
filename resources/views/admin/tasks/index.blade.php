@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold text-gray-800">
-            記事一覧
+            タスク一覧
         </h2>
     </x-slot>
 
